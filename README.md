@@ -123,8 +123,7 @@ The project follows a modular structure to organize source code, configuration, 
 ├── /src
 │   ├── /services                  # Contains the API client and service functions
 │   │   ├── apiClient.ts           # Main API client function for making requests
-│   │   ├── fetchFilteredData.ts   # Generic function for fetching filtered data
-│   │   └── fetchMultipleResources.ts # Function for performing multiple concurrent requests
+│   │   └── userService.ts         # User-related API requests
 │   ├── /types                     # TypeScript type definitions and interfaces
 │   └── /tests                     # Unit and integration tests
 ├── README.md                      # Project documentation
@@ -135,8 +134,7 @@ The project follows a modular structure to organize source code, configuration, 
 ### Explanation of Key Files
 
 - **apiClient.ts**: Core API client function for sending HTTP requests with optional authentication support.
-- **fetchFilteredData.ts**: Generic function to fetch data from a resource with filtering, sorting, and pagination options.
-- **fetchMultipleResources.ts**: Utility for making multiple concurrent API requests.
+- **userService.ts**: Provides reusable functions for managing user-related API requests, including fetching, creating, updating, and deleting users.
 - **tests**: Contains Jest or Postman test files to verify API client functionality.
 
 ## Testing
