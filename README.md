@@ -14,6 +14,7 @@ This project provides a TypeScript-based, reusable API client designed to intera
 - [Project Structure](#project-structure)
 - [Testing](#testing)
 - [Contributing](#contributing)
+- [Husky Integration](#husky-integration)
 
 ## Features
 
@@ -170,3 +171,26 @@ Contributions are welcome! If you have suggestions, bug reports, or want to add 
 2. Create a new branch with a descriptive name.
 3. Make changes and commit with clear, concise commit messages.
 4. Push your branch and open a pull request.
+
+## Husky Integration
+
+This project includes [Husky](https://typicode.github.io/husky/#/) to automate testing on every commit.
+
+### How it Works
+
+- Husky is configured to run `npm test` automatically whenever you make a `git commit`.
+- This ensures that all tests pass before the code is committed, helping to maintain code quality and prevent errors from being introduced.
+
+### Setting up Husky
+
+If you need to reinstall Husky or modify its configuration, refer to the [Husky documentation](https://typicode.github.io/husky/#/) for more details on how to customize pre-commit hooks.
+
+### Running Tests Manually
+
+In addition to the automated testing, you can always run tests manually by executing:
+
+```bash
+npm test
+```
+
+With this setup, code quality is enforced through continuous testing with each commit.
