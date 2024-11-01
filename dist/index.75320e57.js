@@ -584,6 +584,143 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"jyKRr":[function(require,module,exports) {
+var _apiClient = require("../services/apiClient");
+async function fetchUsers() {
+    try {
+        // Call the apiClient function with the /users endpoint
+        const users = await (0, _apiClient.apiClient)("/users/1");
+        console.log("Fetched users:", users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+// Execute the function
+fetchUsers();
+
+},{"../services/apiClient":"cx5Xr"}],"cx5Xr":[function(require,module,exports) {
+/**
+ * @interface ApiClientOptions
+ * @extends RequestInit
+ *
+ * Custom options for configuring API requests, extending the standard `RequestInit` options.
+ * Allows for additional headers and a JSON string body in the request configuration.
+ *
+ * @property {Record<string, string>} [headers] - Optional custom headers to include in the request.
+ * @property {string} [body] - Optional JSON string for the request body, typically used for POST/PUT requests.
+ */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+/**
+ * Makes a fetch request to the specified endpoint with optional authentication and returns the response as JSON.
+ *
+ * This generic `apiClient` function performs a fetch request to the API using the provided endpoint and configuration options.
+ * It includes optional authentication through a Bearer token, which, if provided, is automatically added to the `Authorization` header.
+ *
+ * @template T - The expected type of the response data.
+ * @param {string} endpoint - The API endpoint to request (appended to the base URL).
+ * @param {ApiClientOptions} [options={}] - Optional configuration for the request, extending `RequestInit` and supporting custom headers and body.
+ * @param {string} [authToken] - Optional Bearer token for authentication; if provided, the token is included in the `Authorization` header.
+ * @returns {Promise<T>} - A promise that resolves to the response data, cast to type `T`.
+ *
+ * @throws {Error} - Throws an error if the response is not successful (non-2xx status).
+ *
+ * @example
+ * // Example usage to fetch a list of users with an auth token:
+ * const users = await apiClient<User[]>('/users', {}, 'your-auth-token');
+ *
+ * @example
+ * // Example usage to create a new user (POST request):
+ * const newUser = await apiClient<User>('/users', {
+ *   method: 'POST',
+ *   body: JSON.stringify({ name: 'John Doe', email: 'john@example.com' })
+ * }, 'your-auth-token');
+ */ parcelHelpers.export(exports, "apiClient", ()=>apiClient);
+/**
+ * Generic function to fetch data from a specified resource with an optional search term.
+ *
+ * @param resource - The name of the resource endpoint (e.g., 'users', 'posts').
+ * @param searchField - The field to filter on (e.g., 'name', 'title').
+ * @param searchTerm - The term to search for (optional).
+ * @returns A promise that resolves to an array of data of type T.
+ */ parcelHelpers.export(exports, "fetchData", ()=>fetchData);
+/**
+ * Generic function to fetch filtered data from an API endpoint.
+ *
+ * @param resource - The name of the resource (e.g., 'users', 'posts').
+ * @param filters - An object where keys are field names and values are the values to filter by.
+ * @param options - Additional options for sorting, ordering, and pagination.
+ * @returns A promise that resolves to an array of data of type T.
+ */ parcelHelpers.export(exports, "fetchFilteredData", ()=>fetchFilteredData);
+async function apiClient(endpoint, options = {}, authToken) {
+    const BASE_URL = "https://jsonplaceholder.typicode.com";
+    const config = {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+            ...authToken ? {
+                Authorization: `Bearer ${authToken}`
+            } : {}
+        }
+    };
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, config);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("API call failed:", error);
+        throw error;
+    }
+}
+async function fetchData(resource, searchField, searchTerm = "") {
+    // If there's a search term, construct the endpoint with a query parameter
+    const endpoint = searchTerm ? `/${resource}?${searchField}_like=${searchTerm}` : `/${resource}`;
+    return apiClient(endpoint);
+}
+async function fetchFilteredData(resource, filters, options = {}) {
+    const queryParams = new URLSearchParams();
+    // Add filter parameters to the query string
+    Object.entries(filters).forEach(([field, value])=>{
+        queryParams.append(field, value.toString());
+    });
+    // Add sorting, ordering, and pagination options
+    if (options.sortBy) queryParams.append("_sort", options.sortBy);
+    if (options.order) queryParams.append("_order", options.order);
+    if (options.limit) queryParams.append("_limit", options.limit.toString());
+    if (options.start) queryParams.append("_start", options.start.toString());
+    const endpoint = `/${resource}?${queryParams.toString()}`;
+    return apiClient(endpoint);
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
 },{}]},["3kPO5","jyKRr"], "jyKRr", "parcelRequiredc68")
 
